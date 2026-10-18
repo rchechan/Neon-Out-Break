@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>THE NINTH MINUTE</title>
+<style>
+:root{--teal:#5ef9e7;--gold:#e8c18a;--red:#ff647f;--fog:#9eacc5;--bg:#060b17}
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Tahoma,"Noto Sans Arabic","Arial",sans-serif;color:#eaf5ff;touch-action:none}
+button{font-family:inherit;border:0;color:inherit;cursor:pointer;touch-action:manipulation}
+button:active{filter:brightness(1.32);transform:scale(.975)}
+#app{width:100vw;height:100dvh;overflow:hidden;position:relative;isolation:isolate;background:radial-gradient(ellipse at 60% 70%,#132b36,#050914 65%)}
+#app:after{content:"";pointer-events:none;position:absolute;z-index:12;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.06) 4px);opacity:.4}
+#gameCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.screen{position:absolute;inset:0;z-index:3;display:flex}
+.hidden{display:none!important}
+.glass{background:linear-gradient(155deg,rgba(13,24,43,.95),rgba(7,14,30,.94));border:1px solid rgba(101,222,233,.31);box-shadow:0 18px 75px rgba(0,0,0,.55),inset 0 0 32px rgba(19,89,117,.13)}
+#menu{justify-content:flex-start;align-items:center;padding:3vw 5vw;background:linear-gradient(90deg,rgba(0,0,0,.08),rgba(4,8,21,.15) 40%,rgba(4,8,21,.87) 72%);direction:ltr}
+.menu-panel{width:55%;max-width:685px;min-width:440px;height:91%;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;direction:rtl}
+.eyebrow{font:700 clamp(9px,1.4vw,15px) Arial,sans-serif;letter-spacing:.4em;color:var(--teal);text-shadow:0 0 15px rgba(94,249,231,.7)}
+.logo{font:900 clamp(42px,8.6vw,112px) "Arial Narrow",Impact,Arial,sans-serif;line-height:.88;letter-spacing:-.045em;margin:2.4vh 0 0;direction:ltr;text-align:right;text-shadow:0 6px 0 #071623,0 0 32px #1c9fa359}
+.logo em{font-style:normal;color:var(--gold);display:block}
+.menu-line{height:3px;width:min(40vw,460px);margin:2.5vh 0;background:linear-gradient(90deg,transparent,var(--teal))}
+.tagline{font-size:clamp(11px,1.8vw,20px);color:#f0e7dc;line-height:1.8;margin:0 0 3vh}
+.menu-buttons{display:flex;gap:1.1vw;width:100%}
+.action{background:linear-gradient(120deg,#126777,#114050);border:1px solid #6bf9df;border-radius:5px;box-shadow:0 0 23px #1d9b8d2e;padding:12px 24px;font-weight:900;letter-spacing:.025em;font-size:clamp(13px,1.9vw,20px);flex:1;min-height:51px}
+.action.secondary{background:#151e33;border-color:#687894;box-shadow:none;color:#dae7f5}
+.action.gold{background:linear-gradient(120deg,#866540,#4a3430);border-color:#e1c18e}
+.action.danger{background:#4d2535;border-color:#e6698a}
+.action:disabled{opacity:.4;filter:grayscale(1);cursor:default}
+small{font-size:clamp(9px,1.18vw,13px);color:var(--fog)}
+.menu-foot{margin-top:3vh;font:700 11px Arial;letter-spacing:.25em;color:#718b9e}
+#hud{position:absolute;z-index:4;inset:0;pointer-events:none}
+.hud-top{display:flex;align-items:start;justify-content:space-between;gap:12px;padding:11px 17px;direction:rtl}
+.hud-block{background:rgba(4,12,26,.81);border:1px solid #429a9c55;border-radius:5px;padding:9px 13px;backdrop-filter:blur(8px);min-width:165px}
+.hud-kicker{font:700 9px Arial;letter-spacing:.17em;color:var(--teal);display:block;text-transform:uppercase;direction:ltr;text-align:right}
+.hud-title{font-weight:900;font-size:clamp(12px,1.5vw,18px);margin-top:4px}
+.meter{display:flex;gap:4px;margin-top:8px}
+.heart{width:18px;height:5px;background:#35445b;border-radius:1px}
+.heart.on{background:#fa6786;box-shadow:0 0 9px #fa678670}
+.status-strip{display:flex;align-items:center;gap:12px;background:rgba(4,12,26,.81);border:1px solid #429a9c55;padding:9px 13px;border-radius:5px;direction:ltr;font:700 clamp(10px,1.4vw,15px) Arial}
+.status-strip strong{color:var(--gold);font-size:1.1em}
+.objective{position:absolute;top:86px;right:17px;padding:9px 13px;max-width:390px;background:#071421ce;border-right:3px solid var(--teal);font-size:clamp(11px,1.45vw,16px);line-height:1.5}
+.hud-menu{pointer-events:auto;position:absolute;top:77px;left:16px;padding:6px 15px;border:1px solid #75859766;background:#0a1626c9;font-weight:800;border-radius:3px;font-size:14px}
+.hud-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:clamp(10px,1.2vw,14px);color:#b7c8d6;text-shadow:0 2px 10px #000}
+#controls{position:absolute;z-index:5;inset:0;pointer-events:none}
+.dpad{position:absolute;bottom:18px;left:18px;width:155px;height:132px;pointer-events:auto;direction:ltr}
+.dir{position:absolute;width:49px;height:49px;background:#102b3bbf;border:1px solid #5fead69c;border-radius:11px;font:bold 28px Arial;box-shadow:0 0 15px #38cfbf22;display:grid;place-items:center}
+.dir[data-dir=up]{left:52px;top:0}.dir[data-dir=left]{left:0;top:53px}.dir[data-dir=down]{left:52px;top:53px}.dir[data-dir=right]{left:104px;top:53px}
+.game-actions{position:absolute;bottom:28px;right:18px;display:flex;align-items:center;gap:11px;pointer-events:auto}
+.round{width:80px;height:80px;border-radius:50%;border:2px solid #46c7bd;background:#102934de;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;box-shadow:0 0 22px #41bfa733;position:relative}
+.round b{font-size:22px}.round span{font-size:11px}.round.pulse{border-color:#d0a3ff;background:#2e1d48dc;box-shadow:0 0 22px #8b4de944}
+.round.cooling{opacity:.5}
+#toast{position:absolute;z-index:7;bottom:117px;left:50%;transform:translateX(-50%);padding:10px 25px;min-width:260px;max-width:75%;text-align:center;border:1px solid #b6dfdf77;background:#071526e8;font-weight:700;font-size:14px;pointer-events:none}
+.overlay{position:absolute;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:rgba(1,5,13,.80);backdrop-filter:blur(7px);padding:22px}
+.modal{width:min(790px,95%);max-height:93%;overflow:auto;border:1px solid #64d9d97a;border-radius:7px;box-shadow:0 23px 80px #000b,0 0 47px #2d9f9f12;background:linear-gradient(140deg,#102036,#07111f);padding:clamp(18px,3vw,34px);direction:rtl}
+.modal-kicker{font:800 11px Arial;letter-spacing:.28em;color:var(--teal);direction:ltr;text-align:right}
+.modal h2{font-size:clamp(21px,3.1vw,36px);line-height:1.25;margin:10px 0 16px;color:#fff}
+.modal p{font-size:clamp(14px,1.85vw,21px);line-height:2.05;color:#d4dce7;margin:12px 0 24px;white-space:pre-line}
+.modal .actions{display:flex;flex-wrap:wrap;gap:10px}
+.modal .actions button{min-width:180px}
+#dialog{align-items:flex-end;padding-bottom:19px;background:linear-gradient(0deg,#02060cdb,transparent 90%);backdrop-filter:none}
+#dialog .modal{width:88%;max-width:1010px;padding:20px 27px;background:linear-gradient(115deg,#07192cf2,#121b31f5);min-height:175px}
+.speaker{font-size:16px;font-weight:900;color:var(--gold);letter-spacing:.01em}
+#dialogText{margin:10px 0 14px;font-size:clamp(16px,2.2vw,25px);line-height:1.9}
+#dialogChoices{display:flex;gap:10px;flex-wrap:wrap}
+.choice{border:1px solid #75bec8;color:#edf5f8;background:#133048;padding:11px 18px;border-radius:5px;font-size:15px;font-weight:800;flex:1;min-width:180px}
+.choice.special{border-color:#efd79c;background:#3a2f26}
+.choice.locked{opacity:.5;border-color:#7b6a6e}
+#terminal .modal{max-width:740px;text-align:center}
+#frequency{position:relative;margin:28px auto 16px;width:95%;height:32px;border:1px solid #529fada8;background:linear-gradient(90deg,#3d162e,#123b49,#3d162e);border-radius:5px}
+#target{position:absolute;top:0;bottom:0;width:14%;background:#5affba66;border-right:2px solid #6cffc7;border-left:2px solid #6cffc7}
+#needle{position:absolute;top:-8px;bottom:-8px;width:4px;background:white;box-shadow:0 0 17px #fff;left:0}
+.hackstatus{font:800 12px Arial;color:var(--gold);letter-spacing:.2em}
+#workshop .modal{max-width:910px}
+.shop-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0 21px}
+.shop-item{border:1px solid #426780;background:#101f34;border-radius:8px;padding:15px;display:flex;flex-direction:column;min-height:150px}
+.shop-item h3{margin:0 0 10px;color:var(--teal);font-size:17px}
+.shop-item p{font-size:12px;line-height:1.6;margin:0 0 11px;flex:1;color:#b9c8d8}
+.shop-item button{background:#224b52;padding:10px;border-radius:4px;border:1px solid #5fcbbe;font-weight:800}
+.shop-item button:disabled{opacity:.45}
+#creditsLine{color:var(--gold)}
+#ending .modal{text-align:center;max-width:740px}
+#ending .modal p{line-height:2.1}
+.end-symbol{font:900 76px Arial;color:var(--gold);text-shadow:0 0 32px #e5b37f8a}
+#pause .modal{max-width:520px;text-align:center}
+@media(max-height:480px){.modal{padding:15px}.modal h2{margin:8px 0}.modal p{margin:8px 0;font-size:14px;line-height:1.6}.menu-panel{height:96%}.tagline{margin-bottom:1vh}.menu-line{margin:1.2vh 0}.action{min-height:42px;padding:8px 12px}.shop-item{min-height:100px}.shop-item p{font-size:11px}.dpad{transform:scale(.82);transform-origin:bottom left}.round{width:68px;height:68px}.hud-hint{display:none}}
+@media(max-width:700px){.menu-panel{min-width:0;width:72%}.shop-grid{grid-template-columns:repeat(3,1fr)}.shop-item{padding:8px}.shop-item h3{font-size:12px}.choice{min-width:120px;padding:8px}.modal{padding:13px}.modal p{font-size:13px}.logo{font-size:11vw}}
+</style>
+</head>
+<body>
+<main id="app">
+  <canvas id="gameCanvas" width="960" height="540"></canvas>
+  <section id="menu" class="screen">
+    <div class="menu-panel">
+      <div class="eyebrow">A STORY YOU CAN CHANGE</div>
+      <h1 class="logo">THE NINTH<em>MINUTE</em></h1>
+      <div class="menu-line"></div>
+      <p class="tagline">هر شب، شهر نه دقیقه از حافظه‌اش را از دست می‌دهد.<br>امشب صدای کسی را می‌شنوی که دوازده سال پیش مرده است.</p>
+      <div class="menu-buttons">
+        <button id="startGame" class="action">شروع داستان</button>
+        <button id="continueGame" class="action secondary">ادامه</button>
+      </div>
+      <div class="menu-foot">EPISODE ONE — THE CITY THAT FORGOT</div>
+    </div>
+  </section>
+  <section id="hud" class="hidden">
+    <div class="hud-top">
+      <div class="hud-block"><span class="hud-kicker">CHAPTER <span id="chapterNum">01</span></span><div id="chapterTitle" class="hud-title">ایستگاه مترو</div><div id="healthBar" class="meter"></div></div>
+      <div class="status-strip"><span>ECHO <strong id="evidenceCount">0</strong></span><span>₵ <strong id="coinHud">0</strong></span><span>ALARM <strong id="alarmHud">0%</strong></span></div>
+    </div>
+    <div class="objective" id="objective"></div>
+    <button class="hud-menu" id="pauseButton">Ⅱ مکث</button>
+    <div class="hud-hint">با دکمه‌ها حرکت کن • نزدیک اشیا دکمه «بررسی» را بزن • نگهبان‌ها را دور بزن</div>
+  </section>
+  <section id="controls" class="hidden">
+    <div class="dpad">
+      <button class="dir" data-dir="up">↑</button><button class="dir" data-dir="left">←</button>
+      <button class="dir" data-dir="down">↓</button><button class="dir" data-dir="right">→</button>
+    </div>
+    <div class="game-actions"><button id="pulseBtn" class="round pulse"><b>◉</b><span id="pulseText">پالس</span></button><button id="interactBtn" class="round"><b>✦</b><span>بررسی</span></button></div>
+  </section>
+  <div id="toast" class="hidden"></div>
+  <section id="dialog" class="overlay hidden"><div class="modal">
+    <div class="modal-kicker" id="dialogKicker">INCOMING SIGNAL</div>
+    <div class="speaker" id="dialogSpeaker"></div>
+    <p id="dialogText"></p>
+    <div id="dialogChoices"></div>
+  </div></section>
+  <section id="terminal" class="overlay hidden"><div class="modal">
+    <div class="modal-kicker">SECURE CONNECTION // FREQUENCY LOCK</div>
+    <h2>نفوذ به سامانه</h2>
+    <p>نشانگر سفید حرکت می‌کند. درست وقتی وارد محدوده سبز شد، دکمه «قفل فرکانس» را بزن.</p>
+    <div class="hackstatus" id="hackStatus">CHANNEL 1 / 3</div>
+    <div id="frequency"><div id="target"></div><div id="needle"></div></div>
+    <button id="lockBtn" class="action">قفل فرکانس</button>
+    <button id="cancelHack" class="action secondary" style="flex:0;margin:8px">بازگشت</button>
+  </div></section>
+  <section id="workshop" class="overlay hidden"><div class="modal">
+    <div class="modal-kicker">SAFEHOUSE // EQUIPMENT</div>
+    <h2>پناهگاه سیگنال</h2>
+    <p>از قطعات پیدا‌شده، تجهیزات بساز. ارتقاها تا پایان داستان باقی می‌مانند.</p>
+    <div id="creditsLine"></div><div class="shop-grid" id="shopGrid"></div>
+    <button id="nextChapter" class="action">ادامه مأموریت ←</button>
+  </div></section>
+  <section id="pause" class="overlay hidden"><div class="modal">
+    <div class="modal-kicker">SIGNAL INTERRUPTED</div><h2>بازی متوقف شد</h2>
+    <div class="actions"><button id="resumeBtn" class="action">ادامه</button><button id="quitBtn" class="action secondary">منوی اصلی</button></div>
+  </div></section>
+  <section id="ending" class="overlay hidden"><div class="modal">
+    <div class="end-symbol" id="endingSymbol">09</div>
+    <div class="modal-kicker" id="endingKicker">TRANSMISSION COMPLETE</div><h2 id="endingTitle"></h2>
+    <p id="endingText"></p><div class="actions">
+      <button id="replayBtn" class="action">داستان را دوباره تجربه کن</button>
+      <button id="menuBtn" class="action secondary">منوی اصلی</button>
+    </div>
+  </div></section>
+</main>
+<script src="game.js"></script>
+</body></html>
