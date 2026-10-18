@@ -1,4 +1,4 @@
-name: Build Neon Outbreak APK
+name: Build Zombie Star Night Raid APK
 
 on:
   push:
@@ -12,38 +12,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-
-      - name: Verify preinstalled Android SDK
+      - name: Verify Android SDK
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
           test -d "$ANDROID_HOME/platforms/android-35"
           test -d "$ANDROID_HOME/build-tools/35.0.0"
-
-      - name: Set up Gradle 8.9
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
       - name: Build debug APK
         run: gradle :app:assembleDebug --stacktrace
-
       - name: Rename APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk Neon-Out-Break.apk
-
+        run: cp app/build/outputs/apk/debug/app-debug.apk Zombie-Star-Night-Raid.apk
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Neon-Out-Break-APK
-          path: Neon-Out-Break.apk
-          if-no-files-found: error
+          name: Zombie-Star-Night-Raid-APK
+          path: Zombie-Star-Night-Raid.apk
           retention-days: 30
+          if-no-files-found: error
