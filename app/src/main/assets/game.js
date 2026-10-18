@@ -155,7 +155,8 @@ function nextDialogue(){
   dialogIndex++;
   if(dialogIndex<dialogue.length)updateDialogue();
   else{
-    $hidden('dialog',true);mode='play';
+    $hidden('dialog',true);
+    if(mode==='dialog')mode='play';
     const fn=afterDialogue;afterDialogue=null;
     if(fn)fn();
   }
