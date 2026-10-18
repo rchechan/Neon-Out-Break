@@ -468,7 +468,7 @@ function drawBackdrop(t){
   }
 }
 function drawMenuArt(t){
-  cx.save();cx.translate(255,278);
+  cx.save();cx.translate(750,278);
   for(let i=6;i>=1;i--){
     cx.strokeStyle=i%2?'#20d9d71c':'#e8bf812a';cx.lineWidth=i*2.1;
     cx.beginPath();cx.ellipse(0,0,85+i*24,85+i*24,0,0,Math.PI*2);cx.stroke();
@@ -484,14 +484,14 @@ function drawMenuArt(t){
   cx.fillStyle='#ffffff';cx.beginPath();cx.arc(0,0,10,0,Math.PI*2);cx.fill();
   cx.restore();
   // Silhouette of the person in the last train
-  cx.save();cx.translate(268,405);
+  cx.save();cx.translate(755,405);
   glow(0,0,100,'#5cf8dc',.25);
   cx.fillStyle='#020712';
   cx.beginPath();cx.ellipse(0,-52,20,25,0,0,Math.PI*2);cx.fill();
   cx.beginPath();cx.moveTo(-29,-24);cx.lineTo(-45,72);cx.lineTo(42,72);cx.lineTo(25,-24);cx.closePath();cx.fill();
   cx.fillStyle='#66deed';cx.fillRect(-13,-55,6,3);
   cx.restore();
-  cx.fillStyle='#ffffff77';cx.font='12px Arial';cx.fillText('23:59',223,499);
+  cx.fillStyle='#ffffff77';cx.font='12px Arial';cx.fillText('23:59',723,499);
 }
 function drawLevel(t){
   if(!game)return;
