@@ -9,6 +9,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.JavascriptInterface;
 
 public class StoryActivity extends Activity {
     private WebView browser;
@@ -27,6 +28,7 @@ public class StoryActivity extends Activity {
         browser.setHorizontalScrollBarEnabled(false);
         browser.setWebViewClient(new WebViewClient());
         browser.setWebChromeClient(new WebChromeClient());
+        browser.addJavascriptInterface(new SaveBridge(), "NinthSave");
 
         WebSettings settings = browser.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -42,6 +44,18 @@ public class StoryActivity extends Activity {
         settings.setUseWideViewPort(true);
         browser.loadUrl("file:///android_asset/index.html");
         setContentView(browser);
+    }
+
+    public final class SaveBridge {
+        @JavascriptInterface public String read() {
+            return getSharedPreferences("ninthminute_save", MODE_PRIVATE).getString("state", "");
+        }
+        @JavascriptInterface public void write(String value) {
+            if (value != null && value.length() < 100000) {
+                getSharedPreferences("ninthminute_save", MODE_PRIVATE)
+                    .edit().putString("state", value).apply();
+            }
+        }
     }
 
     private void hideBars() {
