@@ -359,7 +359,7 @@ public class VoidRiderActivity extends Activity {
             }
             for(Star s:stars){
                 int alpha=(int)(100+85*Math.sin(time*1.7+s.blink));
-                ellipse(c,s.x,(s.y+time*(.7+s.s*.5f))%288,s.s*.60f,tint(WHITE,alpha));
+                ellipse(c,s.x,(s.y+time*(.7f+s.s*.5f))%288,s.s*.60f,tint(WHITE,alpha));
             }
             drawCity(c);
         }
