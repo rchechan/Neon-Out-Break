@@ -86,13 +86,23 @@ function newGame(){
     cleared:{},terminals:{},replayed:false,alarm:0,pulseCooldown:0,invuln:0,clock:0,seen:0,totalFinds:0};
   enterLevel(0,true);
 }
+function readSaved(){
+  try {
+    if(window.NinthSave && typeof window.NinthSave.read==='function')return window.NinthSave.read();
+    return localStorage.getItem('nineMinuteSave');
+  }catch(e){return null;}
+}
 function save(){
-  try{localStorage.setItem('nineMinuteSave',JSON.stringify(game));}catch(e){}
+  try {
+    const data=JSON.stringify(game);
+    if(window.NinthSave && typeof window.NinthSave.write==='function')window.NinthSave.write(data);
+    else localStorage.setItem('nineMinuteSave',data);
+  }catch(e){}
   $('continueGame').disabled=false;
 }
 function load(){
   try{
-    const data=JSON.parse(localStorage.getItem('nineMinuteSave')||'null');
+    const data=JSON.parse(readSaved()||'null');
     if(!data||typeof data.level!=='number'){notice('ذخیره‌ای وجود ندارد.');return;}
     game=data;game.inventory=game.inventory||{};
     game.upgrades=game.upgrades||{armor:0,speed:0,pulse:0};
@@ -419,7 +429,7 @@ function endGame(which){
 function showMenu(){
   mode='menu';$hidden('menu',false);
   ['hud','controls','pause','ending','workshop','dialog','terminal'].forEach(s=>$hidden(s,true));
-  const saved=!!localStorage.getItem('nineMinuteSave');$('continueGame').disabled=!saved;
+  const saved=!!readSaved();$('continueGame').disabled=!saved;
 }
 function pauseGame(){
   if(mode!=='play')return;mode='pause';$hidden('pause',false);keyState.clear();pad.clear();
