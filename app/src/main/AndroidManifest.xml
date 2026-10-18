@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:allowBackup="true"
-        android:label="Zombie Star - Night Raid"
+        android:label="VOIDRIDER: Rift Run"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen">
         <activity
-            android:name=".ZombieStarActivity"
+            android:name=".VoidRiderActivity"
             android:screenOrientation="landscape"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true">
