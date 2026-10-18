@@ -284,7 +284,7 @@ public class VoidRiderActivity extends Activity {
             if(n==2){
                 for(int v=-1;v<=1;v++)if(v!=safe)objects.add(new Obj(176,v,hazard()));
             }else{
-                int l=(safe+1+spawnRandom.nextInt(2))%3-1;
+                int l=safe+(spawnRandom.nextBoolean()?1:2); if(l>1)l-=3;
                 objects.add(new Obj(176,l,hazard()));
             }
             objects.add(new Obj(195,safe,spawnRandom.nextInt(100)<16?4:3));
